@@ -1,11 +1,19 @@
-const { compilerOptions } = require("./tsconfig");
+const ES_MODULES = [
+  "filenamify",
+  "trim-repeated",
+  "escape-string-regexp",
+  "filename-reserved-regex",
+  "strip-outer",
+].join("|");
 
-module.exports = {
+export default {
   testEnvironment: "node",
   transform: {
-    "\\.(ts|tsx)$": "ts-jest",
+    "\\.m?(ts|tsx)$": "ts-jest",
+    [`(${ES_MODULES})`]: "jest-esm-transformer",
   },
+  transformIgnorePatterns: [`/node_modules/(?!${ES_MODULES})`],
   testPathIgnorePatterns: ["<rootDir>/dist/"],
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
-  setupFilesAfterEnv: ["./jest.setup.js"],
+  setupFilesAfterEnv: ["./jest.setup.ts"],
 };
